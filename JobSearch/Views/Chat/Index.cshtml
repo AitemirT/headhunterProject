@@ -1,0 +1,73 @@
+@model JobSearch.Models.Chat
+
+@{
+    ViewBag.Title = "Details of chat";
+}
+
+<div class="container mt-4">
+    <h3 class="text-center">Чат</h3>
+    <div class="chat-box border rounded p-3 mb-3" style="height: 400px; overflow-y: scroll;">
+        <ul id="chatMessages" class="list-unstyled">
+            @foreach (var message in Model.Messages.OrderBy(m => m.DateOfSend))
+            {
+                <li class="mb-2">
+                    <strong>@message.Sender.UserName:</strong>
+                    <span>@message.Text</span>
+                    <small class="text-muted" style="font-size: 0.8em;">(@message.DateOfSend.ToLocalTime())</small>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <form id="messageForm">
+        <div class="input-group">
+            <input type="text" id="messageText" class="form-control" placeholder="Введите сообщение..." />
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#messageForm").submit(function (event) {
+                event.preventDefault();
+
+                let messageText = $("#messageText").val();
+                if (!messageText.trim()) {
+                    console.log("Сообщение не может быть пустым.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("SendMessage", "Chat")',
+                    method: "POST",
+                    data: {
+                        chatId: @Model.Id,
+                        messageText: messageText
+                    },
+                    success: function () {
+                        $("#messageText").val("");
+                        loadMessages();
+                    },
+                    error: function (ex) {
+                        console.log("Ошибка: " + ex.responseText);
+                    }
+                });
+            });
+            
+            function loadMessages() {
+                $.ajax({
+                    url: '@Url.Action("Index", "Chat", new { chatId = Model.Id })',
+                    method: "GET",
+                    success: function (data) {
+                        let newMessages = $(data).find("#chatMessages").html();
+                        $("#chatMessages").html(newMessages);
+                    }
+                });
+            }
+            setInterval(loadMessages, 5000);
+        });
+    </script>
+}
+

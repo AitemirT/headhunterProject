@@ -1,0 +1,50 @@
+﻿@model List<Respond>
+
+<h2 class="text-center mb-4">Все отклики</h2>
+
+<div class="row">
+    <div class="col-6 mx-auto">
+        @foreach (Respond respond in Model)
+        {
+            <div class="card cv-vacancy-card mb-4" onclick="moveToDetails('@Url.Action("Details", "Vacancy", new {id = respond.Vacancy.Id})')" style="cursor:pointer;">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>
+                        @respond.Vacancy.Title
+                    </h5>
+
+                    <div>
+                        @respond.Vacancy.UpdateDate.ToShortDateString()
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-title">Прикрепленное резюме: @respond.Cv.Title</p>
+                    <div class="d-flex">
+                        @if (User.IsInRole("employer"))
+                        {
+                            <a class="btn btn-outline-secondary me-3" asp-action="Profile" asp-controller="User" asp-route-id="@respond.Cv.UserId">Профиль соискателя</a>
+                            <a class="btn btn-outline-secondary me-3" asp-action="Details" asp-controller="Cv" asp-route-id="@respond.CvId">Прикрепленное резюме</a>
+                        }
+                        @if (User.IsInRole("jobSeeker"))
+                        {
+                            <a class="btn btn-outline-secondary me-3" asp-action="Profile" asp-controller="User" asp-route-id="@respond.Vacancy.UserId">Профиль компании</a>
+                        }
+                        <a class="btn btn-primary" asp-action="Index" asp-controller="Chat" asp-route-chatId="@respond.ChatId">Перейти к чату</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function moveToDetails(url, event) {
+            if (event.target.tagName === 'A' || event.target.closest('a')) {
+                return;
+            }
+
+            window.location.assign(url);
+        }
+    </script>
+}

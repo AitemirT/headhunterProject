@@ -1,0 +1,140 @@
+@model JobSearch.Models.Cv
+
+@{
+    ViewData["Title"] = "Детали резюме";
+}
+
+<h2 class="text-center mb-3">Детали резюме</h2>
+
+<div class="row">
+    <div class="col-7 mx-auto">
+        <div class="row mb-5">
+            <div class="col-4 d-flex justify-content-center">
+                <img src="@Model.User.PathToAvatarPhoto" alt="Profile Picture" class="img-fluid">
+            </div>
+
+            <div class="col-8 d-flex flex-column justify-content-center">
+                <table class="table table-bordered mb-3">
+                    <tr>
+                        <th>Имя</th>
+                        <td>@Model.User.UserName</td>
+                    </tr>
+                    <tr>
+                        <th>Почта</th>
+                        <td>@Model.User.Email</td>
+                    </tr>
+                    <tr>
+                        <th>Номер телефона</th>
+                        <td>@Model.User.PhoneNumber</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <h3 class="text-center">@Model.Title</h3>
+
+        <table class="table table-bordered mb-3">
+            <tr>
+                <th>Дата обновления</th>
+                <td>@Model.UpdateDate.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <th>Ожидаемый уровень заработной платы</th>
+                <td>@Model.ExpectedSalaryLevel</td>
+            </tr>
+            <tr>
+                <th>Категория вакансии</th>
+                <td>@Model.JobCategory.Name</td>
+            </tr>
+        </table>
+
+        <h3 class="text-center mb-3">Опыт работы</h3>
+
+        <table class="table table-bordered mb-3">
+            @for (int i = 0; i < Model.WorkExperiences.Count; i++)
+            {
+                <tr>
+                    <th colspan="2" class="text-center">Опыт работы #@(i+1)</th>
+                </tr>
+                <tr>
+                    <th>Год начала работы</th>
+                    <td>@Model.WorkExperiences[i].WorkStartYear</td>
+                </tr>
+                <tr>
+                    <th>Год окончания работы</th>
+                    <td>@Model.WorkExperiences[i].WorkEndYear</td>
+                </tr>
+                <tr>
+                    <th>Название места работы</th>
+                    <td>@Model.WorkExperiences[i].CompanyName</td>
+                </tr>
+                <tr>
+                    <th>Должность</th>
+                    <td>@Model.WorkExperiences[i].Position</td>
+                </tr>
+                <tr>
+                    <th>Обязанности</th>
+                    <td>@Model.WorkExperiences[i].Responsibilities</td>
+                </tr>
+            }
+        </table>
+
+        <h3 class="text-center mb-3">Образование</h3>
+
+        <table class="table table-bordered mb-3">
+            @for (int i = 0; i < Model.Educations.Count; i++)
+            {
+                <tr>
+                    <th colspan="2" class="text-center">Образование #@(i+1)</th>
+                </tr>
+                <tr>
+                    <th>Год начала учебы</th>
+                    <td>@Model.Educations[i].StartYear</td>
+                </tr>
+                <tr>
+                    <th>Год окончания учебы</th>
+                    <td>@Model.Educations[i].EndYear</td>
+                </tr>
+                <tr>
+                    <th>Название учебного заведения</th>
+                    <td>@Model.Educations[i].Name</td>
+                </tr>
+                <tr>
+                    <th>Направление обучения</th>
+                    <td>@Model.Educations[i].Direction</td>
+                </tr>
+            }
+        </table>
+
+        <h3 class="text-center mb-3">Контакты</h3>
+
+        <table class="table table-bordered mb-3">
+            <tr>
+                <th>Почта</th>
+                <td>@Model.EmailContact</td>
+            </tr>
+            <tr>
+                <th>Номер телефона</th>
+                <td>@Model.PhoneNumberContact</td>
+            </tr>
+            <tr>
+                <th>Телеграм</th>
+                <td>@Model.TelegramContact</td>
+            </tr>
+            @if (!string.IsNullOrEmpty(Model.FacebookContact))
+            {
+                <tr>
+                    <th>Facebook</th>
+                    <td>@Model.FacebookContact</td>
+                </tr>
+            }
+            @if (!string.IsNullOrEmpty(Model.LinkedInContact))
+            {
+                <tr>
+                    <th>LinkedIn</th>
+                    <td>@Model.LinkedInContact</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

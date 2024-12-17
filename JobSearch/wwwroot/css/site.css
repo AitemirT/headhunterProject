@@ -1,0 +1,79 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.field-icon {
+  float: right;
+  margin-right: 10px;
+  margin-top: -25px;
+  position: relative;
+  z-index: 2;
+}
+
+.cv-vacancy-card:hover {
+  transform: scale(1.02); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.pagination > li > a
+{
+  background-color: white;
+  color: #198754;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+  color: #198754;
+  background-color: #eee;
+  border-color: #198754;
+}
+
+.pagination > .active > a
+{
+  color: white;
+  background-color: #198754 !Important;
+  border: solid 1px #198754 !Important;
+}
+
+.pagination > .active > a:hover
+{
+  background-color: #198754 !Important;
+  border: solid 1px #198754;
+}
+
+textarea{
+  resize: none;
+}
+
+.is-invalid {
+  border: 2px solid red;
+  background-color: #ffe6e6;
+}
+
+.text-danger {
+  color: red;
+  font-size: 0.9rem;
+}

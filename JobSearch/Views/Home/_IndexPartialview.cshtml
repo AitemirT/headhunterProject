@@ -1,0 +1,209 @@
+﻿@model JobSearch.ViewModels.IndexViewModel
+
+@if (User.IsInRole("jobSeeker"))
+{
+    <div class="container">
+        @foreach (Vacancy vacancy in Model.Vacancies)
+        {
+            <div class="card cv-vacancy-card mb-4" onclick="moveToDetails('@Url.Action("Details", "Vacancy", new {id = vacancy.Id})', event)" style="cursor:pointer;">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>
+                        @vacancy.Title
+                    </h5>
+
+                    <div>
+                        @vacancy.UpdateDate.ToShortDateString()
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-title">Заработная плата: @vacancy.Salary</p>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-secondary me-3" asp-action="Profile" asp-controller="User" asp-route-id="@vacancy.UserId">Профиль компании</a>
+                        <a type="button" class="btn btn-primary" id="openModal" data-bs-toggle="modal" data-bs-target="#respondModal-@vacancy.Id">Откликнуться</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="respondModal-@vacancy.Id" tabindex="-1" aria-labelledby="respondModal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header pb-0 py-3 mt-2" style="border-bottom: none">
+                            <h1 class="modal-title fs-3" id="exampleModalLabel">Отклик на вакансию</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body pt-0 py-3" style="border-bottom: none">
+                            <form asp-action="CreateRespond" asp-controller="Respond" class="d-inline">
+                                <input type="hidden" name="vacancyId" value="@vacancy.Id"/>
+                                <strong>Резюме для отклика</strong>
+                                <select class="form-select w-50" name="cvId">
+                                    @foreach (Cv cv in Model.AllCvs)
+                                    {
+                                        <option value="@cv.Id">@cv.Title</option>
+                                    }
+                                </select>
+                                <div class="modal-footer" style="border-top: none">
+                                    <button type="button" class="btn bg-light border border-1" data-bs-dismiss="modal">Отмена</button>
+                                    <button id="respondBtn" type="submit" class="btn btn-primary px-5">Откликнуться</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        
+        <div class="d-flex justify-content-center mt-5">
+            <nav>
+                <ul class="pagination text-success">
+                    @if (Model.PageViewModelForVacancies.HasPreviousPage)
+                    {
+                    <li class="page-item">
+                        <button type="button" onclick="changePage('@(Model.PageViewModelForVacancies.PageNumber - 1)')" class="page-link">Предыдущая</button>
+                    </li>
+                    }
+                    else
+                    {
+                    <li class="page-item disabled">
+                        <a class="page-link">Предыдущая</a>
+                    </li>
+                    }
+
+                    @if (Model.PageViewModelForVacancies.PageNumber > 3)
+                    {
+                    <li class="page-item disabled">
+                        <span class="page-link disabled">...</span>
+                    </li>
+                    }
+
+                    @for (int i = Math.Max(1, Model.PageViewModelForVacancies.PageNumber - 2); i < Model.PageViewModelForVacancies.PageNumber; i++)
+                    {
+                    <li class="page-item">
+                        <button class="page-link" type="button" onclick="changePage('@i')"  >@i</button>
+                    </li>
+                    }
+
+                    <li class="page-item active">
+                        <button class="page-link" type="button" onclick="changePage('@Model.PageViewModelForVacancies.PageNumber')" >@Model.PageViewModelForVacancies.PageNumber</button>
+                    </li>
+
+                    @for (int i = Model.PageViewModelForVacancies.PageNumber + 1; i <= Math.Min(Model.PageViewModelForVacancies.TotalPages, Model.PageViewModelForVacancies.PageNumber + 2); i++)
+                    {
+                    <li class="page-item">
+                        <button class="page-link" type="button" onclick="changePage('@i')">@i</button>
+                    </li>
+                    }
+
+                    @if (Model.PageViewModelForVacancies.PageNumber < Model.PageViewModelForVacancies.TotalPages - 2)
+                    {
+                    <li class="page-item disabled">
+                        <span class="page-link disabled">...</span>
+                    </li>
+                    }
+
+                    @if (Model.PageViewModelForVacancies.HasNextPage)
+                    {
+                    <li class="page-item">
+                        <button class="page-link" type="button" onclick="changePage('@(Model.PageViewModelForVacancies.PageNumber+1)')">Следующая</button>
+                    </li>
+                    }
+                    else
+                    {
+                    <li class="page-item disabled">
+                        <a class="page-link">Следующая</a>
+                    </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+}
+else if (User.IsInRole("employer"))
+{
+    <div class="container">
+        @foreach (Cv cv in Model.PublicCvs)
+        {
+            <div class="card cv-vacancy-card mb-4" onclick="moveToDetails('@Url.Action("Details", "Cv", new {id = cv.Id})', event)" style="cursor:pointer;">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>
+                        @cv.Title
+                    </h5>
+
+                    <div>
+                        @cv.UpdateDate.ToShortDateString()
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-title">Категория вакансии: @cv.JobCategory.Name</p>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-secondary me-3" asp-action="Profile" asp-controller="User" asp-route-id="@cv.UserId">Профиль Пользователя</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="d-flex justify-content-center mt-5">
+            <nav>
+                <ul class="pagination text-success">
+                    @if (Model.PageViewModelForCvs.HasPreviousPage)
+                    {
+                    <li class="page-item">
+                        <button type="button" onclick="changePage('@(Model.PageViewModelForCvs.PageNumber - 1)')" class="page-link">Предыдущая</button>
+                    </li>
+                    }
+                    else
+                    {
+                    <li class="page-item disabled">
+                        <a class="page-link">Предыдущая</a>
+                    </li>
+                    }
+
+                    @if (Model.PageViewModelForCvs.PageNumber > 3)
+                    {
+                    <li class="page-item disabled">
+                        <span class="page-link disabled">...</span>
+                    </li>
+                    }
+
+                    @for (int i = Math.Max(1, Model.PageViewModelForCvs.PageNumber - 2); i < Model.PageViewModelForCvs.PageNumber; i++)
+                    {
+                    <li class="page-item">
+                        <button class="page-link" type="button" onclick="changePage('@i')"  >@i</button>
+                    </li>
+                    }
+
+                    <li class="page-item active">
+                        <button class="page-link" type="button" onclick="changePage('@Model.PageViewModelForCvs.PageNumber')" >@Model.PageViewModelForCvs.PageNumber</button>
+                    </li>
+
+                    @for (int i = Model.PageViewModelForCvs.PageNumber + 1; i <= Math.Min(Model.PageViewModelForCvs.TotalPages, Model.PageViewModelForCvs.PageNumber + 2); i++)
+                    {
+                    <li class="page-item">
+                        <button class="page-link" type="button" onclick="changePage('@i')">@i</button>
+                    </li>
+                    }
+
+                    @if (Model.PageViewModelForCvs.PageNumber < Model.PageViewModelForCvs.TotalPages - 2)
+                    {
+                    <li class="page-item disabled">
+                        <span class="page-link disabled">...</span>
+                    </li>
+                    }
+
+                    @if (Model.PageViewModelForCvs.HasNextPage)
+                    {
+                    <li class="page-item">
+                        <button class="page-link" type="button" onclick="changePage('@(Model.PageViewModelForCvs.PageNumber+1)')">Следующая</button>
+                    </li>
+                    }
+                    else
+                    {
+                    <li class="page-item disabled">
+                        <a class="page-link">Следующая</a>
+                    </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+}

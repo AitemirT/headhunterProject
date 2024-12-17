@@ -1,0 +1,49 @@
+@model JobSearch.Models.Vacancy
+
+@{
+    ViewBag.Title = "Детали";
+}
+<div class="row">
+    <h3 class="text-center">@Model.Title</h3>
+    <div class="mx-auto col-lg-6">
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td>Дата обновления</td>
+                <td>@Model.UpdateDate</td>
+            </tr>
+            <tr>
+                <td>Категория</td>
+                <td>@Model.JobCategory.Name</td>
+            </tr>
+            <tr>
+                <td>Зарплата</td>
+                <td>@Model.Salary</td>
+            </tr>
+            <tr>
+                <td>Опыт работы</td>
+                <td>@Model.MinExperience-@Model.MaxExperience года</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-center">
+        @if (User.IsInRole("jobSeeker"))
+        {
+            <form asp-action="CreateRespond" asp-controller="Respond" method="post">
+                <input type="hidden" name="vacancyId" value="@Model.Id" />
+                <select name="cvId" class="form-control">
+                    @foreach (Cv cv in ViewBag.Cvs)
+                    {
+                    <option value="@cv.Id">@cv.Title</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Откликнуться</button>
+            </form>
+        }
+    </div>
+    <p class="d-flex justify-content-center mt-3">@Model.Description</p>
+</div>
+
+
+

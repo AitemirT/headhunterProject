@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cv\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cv\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cv\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cv\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Cv\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Vacancy\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Vacancy\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Vacancy\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Vacancy\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Vacancy\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\avatars\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    </ItemGroup>
+
+</Project>

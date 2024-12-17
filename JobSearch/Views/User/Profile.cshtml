@@ -1,0 +1,236 @@
+﻿@using JobSearch.ViewModels
+@model JobSearch.ViewModels.ProfileViewModel
+
+@{
+    ViewBag.Title = "Личный кабинет";
+}
+
+<h2 class="text-center">Личный кабинет</h2>
+
+<div class="row">
+    <div class="col-8 mx-auto border border-2 p-3">
+        <div class="row mb-5">
+            <div class="col-4 d-flex justify-content-center">
+                <img src="@Model.User.PathToAvatarPhoto" alt="Profile Picture" class="img-fluid">
+            </div>
+
+            <div class="col-8 d-flex flex-column justify-content-center">
+                <table class="table table-bordered mb-3">
+                    <tr>
+                        <th>Имя</th>
+                        <td>@Model.User.UserName</td>
+                    </tr>
+                    <tr>
+                        <th>Почта</th>
+                        <td>@Model.User.Email</td>
+                    </tr>
+                    <tr>
+                        <th>Номер телефона</th>
+                        <td>@Model.User.PhoneNumber</td>
+                    </tr>
+                </table>
+                @if (Model.User.Id == Model.CurrentUser.Id)
+                {
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        Редактировать профиль
+                    </button>
+
+                    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактирование профиля</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    @{
+                                        await Html.RenderPartialAsync("_EditFormPartialView", new EditUserViewModel
+                                        {
+                                            Id = Model.User.Id,
+                                            UserName = Model.User.UserName,
+                                            Email = Model.User.Email,
+                                            PhoneNumber = Model.User.PhoneNumber
+                                        });
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        @if (Model.IsTargetUserEmployer)
+        {
+            <h3 class="text-center mb-3">Все вакансии</h3>
+            
+            <div>
+                @if (Model.Vacancies != null && Model.Vacancies.Count > 0)
+                {
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        @foreach (Vacancy v in Model.Vacancies)
+                        {
+
+                            <div class="col">
+                                <div class="card @(v.IsPublic ? "border-success border-4" : "border-secondary")">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@v.Title</h5>
+                                        <p class="card-text">Дата обновления: @v.UpdateDate.ToShortDateString()</p>
+                                        @if (v.UserId == Model.CurrentUser.Id)
+                                        {
+                                            <div class="d-flex flex-column gap-2">
+                                                <form asp-action="Update" asp-controller="Vacancy" class="d-inline">
+                                                    <input type="hidden" name="id" value="@v.Id">
+                                                    <input type="submit" value="Обновить" class="btn btn-outline-secondary w-100">
+                                                </form>
+
+                                                <a asp-action="Edit" asp-controller="Vacancy" asp-route-id="@v.Id" class="btn btn-outline-warning w-100">Редактировать</a>
+
+                                                <form asp-action="PublishHide" asp-controller="Vacancy" class="d-inline">
+                                                    <input type="hidden" name="id" value="@v.Id">
+                                                    @if (v.IsPublic)
+                                                    {
+                                                        <input type="submit" value="Скрыть" class="btn btn-outline-primary w-100">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="submit" value="Опубликовать" class="btn btn-outline-primary w-100">
+                                                    }
+                                                </form>
+                                                <a asp-action="Details" asp-controller="Vacancy" asp-route-id="@v.Id" class="btn btn-outline-success w-100">Детали</a>
+
+                                                <div>
+                                                    <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteVacancyModal" data-bs-whatever="@v.Id">Удалить</button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>   
+                }
+                else
+                {
+                    <p class="text-center">Пока нет вакансии</p>
+                }
+            </div>
+        }
+        @if (Model.IsTargetUserJobSeeker)
+        { 
+            <h3 class="text-center mb-3">Все резюме</h3>
+        
+            <div>
+                @if (Model.Cvs != null && Model.Cvs.Count > 0)
+                {
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        @foreach (Cv cv in Model.Cvs)
+                        {
+                            <div class="col">
+                                <div class="card @(cv.IsPublic ? "border-success border-4" : "border-secondary") cv-vacancy-card" style="cursor: pointer;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@cv.Title</h5>
+                                        <p class="card-text">Дата обновления: @cv.UpdateDate.ToShortDateString()</p>
+                                        @if (cv.UserId == Model.CurrentUser.Id)
+                                        {
+                                            <div class="d-flex flex-column gap-2">
+                                                <form asp-action="Update" asp-controller="Cv" class="d-inline">
+                                                    <input type="hidden" name="id" value="@cv.Id">
+                                                    <input type="submit" value="Обновить" class="btn btn-outline-secondary w-100">
+                                                </form>
+
+                                                <a asp-action="Edit" asp-controller="Cv" asp-route-id="@cv.Id" class="btn btn-outline-warning w-100">Редактировать</a>
+
+                                                <form asp-action="PublishHide" asp-controller="Cv" class="d-inline">
+                                                    <input type="hidden" name="id" value="@cv.Id">
+                                                    @if (cv.IsPublic)
+                                                    {
+                                                        <input type="submit" value="Скрыть" class="btn btn-outline-primary w-100">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="submit" value="Опубликовать" class="btn btn-outline-primary w-100">
+                                                    }
+                                                </form>
+
+                                                <a asp-action="Details" asp-controller="Cv" asp-route-id="@cv.Id" class="btn btn-outline-success w-100">Детали</a>
+
+                                                <div>
+                                                    <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteCvModal" data-bs-whatever="@cv.Id">Удалить</button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>   
+                }
+                else
+                {
+                    <p class="text-center">Пока нет резюме</p>
+                }
+            </div>
+        }
+        
+    </div>
+</div>
+
+<div class="modal fade" id="deleteCvModal" tabindex="-1" aria-labelledby="deleteCvModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteCvModalLabel">Вы действительно хотите удалить резюме ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Отменить</button>
+                <form asp-action="Delete" asp-controller="Cv">
+                    <input type="hidden" name="id" value="" id="cvIdForDelete">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteVacancyModal" tabindex="-1" aria-labelledby="deleteVacancyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteVacancyModalLabel">Вы действительно хотите удалить вакансию ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Отменить</button>
+                <form asp-action="Delete" asp-controller="Vacancy">
+                    <input type="hidden" name="id" value="" id="vacancyIdForDelete">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script>
+        const deleteCvModal = document.getElementById('deleteCvModal')
+        if (deleteCvModal) {
+            deleteCvModal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget
+                const cvId = button.getAttribute('data-bs-whatever')
+                
+                $('#cvIdForDelete').val(cvId);
+            })
+        }
+        const deleteVancancyModal = document.getElementById('deleteVacancyModal')
+        if (deleteVacancyModal) {
+            deleteVacancyModal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget
+                const vacancyId = button.getAttribute('data-bs-whatever')
+
+                $('#vacancyIdForDelete').val(vacancyId);
+            })
+        }
+    </script>
+}

@@ -1,0 +1,339 @@
+@model JobSearch.Models.Cv
+
+@{
+    ViewData["Title"] = "Редактирование резюме";
+}
+
+<h2 class="text-center mb-3">Редактирование резюме</h2>
+
+<div class="row">
+    <div class="col-md-5 mx-auto">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" value="@Model.Id">
+            <input type="hidden" asp-for="UserId" value="@Model.UserId">
+            <input type="hidden" asp-for="IsPublic" value="@Model.IsPublic">
+
+            <div class="mb-3 border border-1 bg-light rounded-2 p-3">
+                <div class="form-group mb-3 text-center">
+                    <label asp-for="Title" class="control-label mb-2">Название должности</label>
+                    <input asp-for="Title" class="form-control"/>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3 text-center">
+                    <label asp-for="ExpectedSalaryLevel" class="control-label mb-2">Ожидаемый уровень зарплаты</label>
+                    <input asp-for="ExpectedSalaryLevel" type="number" min="0" class="form-control"/>
+                    <span asp-validation-for="ExpectedSalaryLevel" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3 text-center">
+                    <label asp-for="JobCategoryId" class="control-label mb-2">Категория вакансии</label>
+                    <select asp-for="JobCategoryId" class="form-control" asp-items="ViewBag.JobCategoryId"></select>
+                </div>
+            </div>
+
+            <div class="mb-3 border border-1 bg-light rounded-2 p-3">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Контакты
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="form-group mb-3 text-center">
+                                    <label asp-for="EmailContact" class="control-label mb-2">Почта</label>
+                                    <input asp-for="EmailContact" class="form-control"/>
+                                    <span asp-validation-for="EmailContact" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mb-3 text-center">
+                                    <label asp-for="PhoneNumberContact" class="control-label mb-2">Номер телефона</label>
+                                    <input asp-for="PhoneNumberContact" class="form-control"/>
+                                    <span asp-validation-for="PhoneNumberContact" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mb-3 text-center">
+                                    <label asp-for="TelegramContact" class="control-label mb-2">Телеграм</label>
+                                    <input asp-for="TelegramContact" class="form-control"/>
+                                    <span asp-validation-for="TelegramContact" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mb-3 text-center">
+                                    <label asp-for="FacebookContact" class="control-label mb-2">Facebook</label>
+                                    <input asp-for="FacebookContact" class="form-control"/>
+                                    <span asp-validation-for="FacebookContact" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mb-3 text-center">
+                                    <label asp-for="LinkedInContact" class="control-label mb-2">LinkedIn</label>
+                                    <input asp-for="LinkedInContact" class="form-control"/>
+                                    <span asp-validation-for="LinkedInContact" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 border border-1 bg-light rounded-2 p-3">
+                <div class="accordion" id="accordionExperience">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Опыт работы
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExperience">
+                            <div class="accordion-body">
+
+                                <div id="work-experience-block">
+                                    @for (int i = 0; i < Model.WorkExperiences.Count; i++)
+                                    {
+                                        <div class="border p-2 mb-3" data-id="@Model.WorkExperiences[i].Id">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <input type="hidden" asp-for="@Model.WorkExperiences[i].Id" value="@Model.WorkExperiences[i].Id">
+                                                    <div class="form-group mb-3 text-center">
+                                                        <label asp-for="@Model.WorkExperiences[i].WorkStartYear" class="control-label mb-2">Год начала работы</label>
+                                                        <input asp-for="@Model.WorkExperiences[i].WorkStartYear" class="form-control"/>
+                                                        <span asp-validation-for="@Model.WorkExperiences[i].WorkStartYear" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <div class="form-group mb-3 text-center">
+                                                        <label asp-for="@Model.WorkExperiences[i].WorkEndYear" class="control-label mb-2">Год окончания работы</label>
+                                                        <input asp-for="@Model.WorkExperiences[i].WorkEndYear" class="form-control"/>
+                                                        <span asp-validation-for="@Model.WorkExperiences[i].WorkEndYear" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group mb-3 text-center">
+                                                <label asp-for="@Model.WorkExperiences[i].CompanyName" class="control-label mb-2">Название компании</label>
+                                                <input asp-for="@Model.WorkExperiences[i].CompanyName" class="form-control"/>
+                                                <span asp-validation-for="@Model.WorkExperiences[i].CompanyName" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="form-group mb-3 text-center">
+                                                <label asp-for="@Model.WorkExperiences[i].Position" class="control-label mb-2">Должность</label>
+                                                <input asp-for="@Model.WorkExperiences[i].Position" class="form-control"/>
+                                                <span asp-validation-for="@Model.WorkExperiences[i].Position" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="form-group mb-3 text-center">
+                                                <label asp-for="@Model.WorkExperiences[i].Responsibilities" class="control-label mb-2">Обязанности</label>
+                                                <textarea asp-for="@Model.WorkExperiences[i].Responsibilities" class="form-control" cols="30" rows="5" style="resize: none;"></textarea>
+                                                <span asp-validation-for="@Model.WorkExperiences[i].Responsibilities" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="d-flex justify-content-around">
+                                    <button type="button" id="deleteWorkExperienceButton" class="btn btn-outline-secondary">Удалить последний</button>
+
+                                    <button type="button" id="addWorkExperienceButton" class="btn btn-outline-secondary">Добавить ещё...</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 border border-1 bg-light rounded-2 p-3">
+                <div class="accordion" id="accordionEducation">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Образование
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionEducation">
+                            <div class="accordion-body">
+
+                                <div id="education-block">
+                                    @for (int i = 0; i < Model.Educations.Count; i++)
+                                    {
+                                        <div class="border p-2 mb-3" data-id="@Model.Educations[i].Id">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <input type="hidden" asp-for="@Model.Educations[i].Id" value="@Model.Educations[i].Id">
+                                                    <div class="form-group mb-3 text-center">
+                                                        <label asp-for="@Model.Educations[i].StartYear" class="control-label mb-2">Год начала учебы</label>
+                                                        <input asp-for="@Model.Educations[i].StartYear" class="form-control"/>
+                                                        <span asp-validation-for="@Model.Educations[i].StartYear" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <div class="form-group mb-3 text-center">
+                                                        <label asp-for="@Model.Educations[i].EndYear" class="control-label mb-2">Год окончания учебы</label>
+                                                        <input asp-for="@Model.Educations[i].EndYear" class="form-control"/>
+                                                        <span asp-validation-for="@Model.Educations[i].EndYear" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group mb-3 text-center">
+                                                <label asp-for="@Model.Educations[i].Name" class="control-label mb-2">Название заведения</label>
+                                                <input asp-for="@Model.Educations[i].Name" class="form-control"/>
+                                                <span asp-validation-for="@Model.Educations[i].Name" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="form-group mb-3 text-center">
+                                                <label asp-for="@Model.Educations[i].Direction" class="control-label mb-2">Направление</label>
+                                                <input asp-for="@Model.Educations[i].Direction" class="form-control"/>
+                                                <span asp-validation-for="@Model.Educations[i].Direction" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="d-flex justify-content-around">
+                                    <button type="button" id="deleteEducationButton" class="btn btn-outline-secondary">Удалить последний</button>
+
+                                    <button type="button" id="addEducationButton" class="btn btn-outline-secondary">Добавить ещё...</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary w-100">Подтвердить обновление</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script>
+        let workExperienceBlock = $('#work-experience-block');
+        let educationBlock = $('#education-block');
+        let addWorkExperienceButton = $('#addWorkExperienceButton');
+        let addEducationButton = $('#addEducationButton');
+        let deleteWorkExperienceButton = $('#deleteWorkExperienceButton');
+        let deleteEducationButton = $('#deleteEducationButton');
+        
+        addWorkExperienceButton.click(function () {
+            let currentIndex = workExperienceBlock.children().length;
+            let newBlock = experienceBlockTemplate.replace(/index/g, currentIndex);
+            workExperienceBlock.append(newBlock);
+        });
+        
+        addEducationButton.click(function () {
+            let currentIndex = educationBlock.children().length;
+            let newBlock = educationBlockTemplate.replace(/index/g, currentIndex);
+            educationBlock.append(newBlock);
+        });
+        
+        deleteWorkExperienceButton.click(function () {
+            if (workExperienceBlock.children().length > 0) {
+                let lastElement = workExperienceBlock.children().last();
+                let id = lastElement.data('id');
+                if (!id) {
+                    lastElement.remove();
+                }
+                else {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "WorkExperience")',
+                        type: 'POST',
+                        data: {'id' : id},
+                        success: function () {
+                            lastElement.remove();
+                        }
+                    });
+                }
+            }
+        });
+        
+        deleteEducationButton.click(function () {
+            if (educationBlock.children().length > 0) {
+                let lastElement = educationBlock.children().last();
+                let id = lastElement.data('id');
+                if (!id) {
+                    lastElement.remove();
+                }
+                else {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Education")',
+                        type: 'POST',
+                        data: {'id' : id},
+                        success: function () {
+                            lastElement.remove();
+                        }
+                    });
+                }
+            }
+        });
+
+        let experienceBlockTemplate = `
+    <div class="border p-2 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group mb-3 text-center">
+                    <label for="WorkExperiences_index__WorkStartYear" class="control-label mb-2">Год начала работы</label>
+                    <input name="WorkExperiences[index].WorkStartYear" id="WorkExperiences_index__WorkStartYear" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group mb-3 text-center">
+                    <label for="WorkExperiences_index__WorkEndYear" class="control-label mb-2">Год окончания работы</label>
+                    <input name="WorkExperiences[index].WorkEndYear" id="WorkExperiences_index__WorkEndYear" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb-3 text-center">
+            <label for="WorkExperiences_index__CompanyName" class="control-label mb-2">Название компании</label>
+            <input name="WorkExperiences[index].CompanyName" id="WorkExperiences_index__CompanyName" class="form-control" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3 text-center">
+            <label for="WorkExperiences_index__Position" class="control-label mb-2">Должность</label>
+            <input name="WorkExperiences[index].Position" id="WorkExperiences_index__Position" class="form-control" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3 text-center">
+            <label for="WorkExperiences_index__Responsibilities" class="control-label mb-2">Обязанности</label>
+            <textarea name="WorkExperiences[index].Responsibilities" id="WorkExperiences_index__Responsibilities" class="form-control" cols="30" rows="5" style="resize: none;"></textarea>
+            <span class="text-danger"></span>
+        </div>
+    </div>
+`;
+
+        let educationBlockTemplate = `
+    <div class="border p-2 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group mb-3 text-center">
+                    <label for="Educations_index__StartYear" class="control-label mb-2">Год начала учебы</label>
+                    <input name="Educations[index].StartYear" id="Educations_index__StartYear" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group mb-3 text-center">
+                    <label for="Educations_index__EndYear" class="control-label mb-2">Год окончания учебы</label>
+                    <input name="Educations[index].EndYear" id="Educations_index__EndYear" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb-3 text-center">
+            <label for="Educations_index__Name" class="control-label mb-2">Название заведения</label>
+            <input name="Educations[index].Name" id="Educations_index__Name" class="form-control" />
+            <span class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3 text-center">
+            <label for="Educations_index__Direction" class="control-label mb-2">Направление</label>
+            <input name="Educations[index].Direction" id="Educations_index__Direction" class="form-control" />
+            <span class="text-danger"></span>
+        </div>
+    </div>
+`;
+
+    </script>
+}

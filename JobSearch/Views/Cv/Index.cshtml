@@ -1,0 +1,81 @@
+@model IEnumerable<JobSearch.Models.Cv>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3 class="text-center pb-5">Резюме</h3>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpectedSalaryLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TelegramContact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailContact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumberContact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FacebookContact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LinkedInContact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobCategory)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpectedSalaryLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TelegramContact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailContact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumberContact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FacebookContact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LinkedInContact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobCategory.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
